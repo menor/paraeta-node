@@ -8,11 +8,12 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "dev": "nodemon server"
+    "dev": "NODE_ENV=development nodemon server"
   },
   "dependencies": {
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
+    "helmet": "^3.20.0",
     "mongoose": "^5.6.9"
   },
   "devDependencies": {
@@ -24,6 +25,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
+    "morgan": "^1.9.1",
     "nodemon": "^1.19.1",
     "prettier": "^1.18.2"
   }
