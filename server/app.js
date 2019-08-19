@@ -3,6 +3,7 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 
 const app = express()
+const globalErrorHandler = require('./middleware/errorHandler')
 
 if (process.env.NODE_ENV === 'development') {
   // Simple development logger
@@ -14,5 +15,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Set security HTTP headers (this goes first)
 app.use(helmet())
+
+app.use(globalErrorHandler)
 
 module.exports = app
