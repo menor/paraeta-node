@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const helmet = require('helmet')
 const morgan = require('morgan')
@@ -5,9 +6,13 @@ const rateLimit = require('express-rate-limit')
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
+const cors = require('cors')
+
+const createError = require('./utils/createError')
+const globalErrorHandler = require('./middleware/errorHandler')
+const router = require('./routes')
 
 const app = express()
-const globalErrorHandler = require('./middleware/errorHandler')
 
 if (process.env.NODE_ENV === 'development') {
   // Simple development logger
@@ -19,6 +24,10 @@ if (process.env.NODE_ENV === 'development') {
 
 // Set security HTTP headers (this goes first)
 app.use(helmet())
+
+app.use(cors({
+  // origin: 'CONFIGURE ME'
+}))
 
 // Limit requests from the same IP
 const limiter = rateLimit({
@@ -33,6 +42,7 @@ app.use(limiter)
 // Body parser, reading data from the body into req.body
 // also limiting the amount of data the req can contain
 app.use(express.json({ limit: '10kb' }))
+app.use(express.urlencoded({ extended: true, limit: '10kb' }))
 
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize())
@@ -48,6 +58,17 @@ app.use(
     whitelist: []
   })
 )
+
+// ROUTES
+
+// Serve static files
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.use(router)
+
+app.all('*', (req, res, next) => {
+  next(createError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
 
 app.use(globalErrorHandler)
 
