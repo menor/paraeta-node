@@ -3,7 +3,6 @@ const express = require('express')
 const helmet = require('helmet')
 const morgan = require('morgan')
 const rateLimit = require('express-rate-limit')
-const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
 const cors = require('cors')
@@ -43,9 +42,6 @@ app.use(limiter)
 // also limiting the amount of data the req can contain
 app.use(express.json({ limit: '10kb' }))
 app.use(express.urlencoded({ extended: true, limit: '10kb' }))
-
-// Data sanitization against NoSQL query injection
-app.use(mongoSanitize())
 
 // Data sanitization against XSS
 app.use(xss())
