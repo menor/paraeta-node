@@ -1,14 +1,14 @@
-const express = require('express')
+const express = require('express');
 
-const router = express.Router()
+const router = express.Router();
 
 router.route('/healthz').get((req, res) => {
   res.status(200).json({
     status: 'success',
     data: {
-      message: "I'm alive!"
-    }
-  })
-})
+      message: "I'm alive!",
+    },
+  });
+});
 
-module.exports = router
+module.exports = router;
